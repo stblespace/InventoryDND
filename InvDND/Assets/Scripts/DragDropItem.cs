@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class DragDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Transform originalParent;
+    public Transform originalParent;
     private CanvasGroup canvasGroup;
     private LayoutElement layoutElement;
     private void Awake()
@@ -20,6 +20,12 @@ public class DragDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         originalParent = transform.parent;
+        ItemData itemData = GetComponent<ItemData>();
+        if (itemData != null)
+        {
+            itemData.originalParent = originalParent;
+        }
+
         transform.SetParent(transform.root);
         canvasGroup.blocksRaycasts = false;
         layoutElement.ignoreLayout = true;
@@ -37,7 +43,7 @@ public class DragDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         canvasGroup.blocksRaycasts = true;
         layoutElement.ignoreLayout = false;
 
-        GameObject target = eventData.pointerCurrentRaycast.gameObject;
+        GameObject target = eventData.pointerCurrentRaycast.gameObject; // Спроси, надо ли это тебе?
 
         if (target != null && target.CompareTag("Slot"))
         {
